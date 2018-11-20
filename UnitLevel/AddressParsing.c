@@ -69,11 +69,8 @@ int main()
     InitWeightGBHR();
     perceptron.index = EnterPC(536870911);
     
-    
+    return 0;
 }
 
-
-
-main();
 
 
