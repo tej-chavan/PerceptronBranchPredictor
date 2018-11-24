@@ -6,7 +6,7 @@
 //  Copyright © 2018 tesla. All rights reserved.
 //
 
-#include "PerceptronOut.h"
+//#include "PerceptronOut.h"
 #include <stdio.h>
 #include <math.h>
 #define DEBUG
