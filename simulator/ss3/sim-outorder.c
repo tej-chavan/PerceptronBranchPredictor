@@ -910,6 +910,7 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
   if (fetch_speed < 1)
     fatal("front-end speed must be positive and non-zero");
 
+  printf("asdasdsaadassdsds");
   if (!mystricmp(pred_type, "perfect"))
     {
       /* perfect predictor */

@@ -60,6 +60,7 @@
 #include "bpred.h"
 
 #include <unistd.h>
+#define DEBUG
 
 /* turn this on to enable the SimpleScalar 2.0 RAS bug */
 /* #define RAS_BUG_COMPATIBLE */
@@ -283,16 +284,16 @@ bpred_dir_create (
 
     // Initializing the weight table and global BHT to all 1. They can be initialized to any values. This is more of a trial and error method
     // Initialize weight table elements
-    for (int i = 0; i < pred_dir->config.perceptron.index; i++)
+    for (int i = 0; i < pred_dir->config.perceptron.wt_entries; i++)
     {
-    	for (int j = 0; i < shift_width; j++)
+    	for (int j = 0; i < pred_dir->config.perceptron.bhr_length; j++)
     	{
-    		pred_dir->config.perceptron.weight_table[i][j] = 1;
+    		pred_dir->config.perceptron.weight_table[i][j] = 0;
     	}
     }
 
     // Initialize GBHR elements.
-    for (cnt = 0; cnt < shift_width; cnt++)
+    for (cnt = 0; cnt < pred_dir->config.perceptron.bhr_length; cnt++)
     {
     	pred_dir->config.perceptron.GBHR[cnt] = 1;
     }
@@ -617,27 +618,46 @@ bpred_dir_lookup(struct bpred_dir_t *pred_dir,	/* branch dir predictor inst */
     ----------------------------------------------------------------------------------------------*/  
     case BPredPerceptron:
     {
-    	int index;
     	int i;
-    	signed int sum = 0;
-    	signed int output = 0;
+    	int index;
+    	signed int SumOfProduct = 0;
+    	signed int FinalSum = 0;
 
     	// Calculating the index to hash into the weight table.
     	index = (baddr >> MD_BR_SHIFT) % pred_dir->config.perceptron.wt_entries;
-    	pred_dir->config.perceptron.index = index; 
-
+    	pred_dir->config.perceptron.index = index;
+    	printf("INDEX : %d", pred_dir->config.perceptron.index);
     	// ASsign the 0th bit of GBHR to 1 for maintaining bias
     	pred_dir->config.perceptron.GBHR[0] = 1;
 
     	for (i = 1; i < pred_dir->config.perceptron.bhr_length; i++)
     	{
-    		sum = sum + (pred_dir->config.perceptron.weight_table[index][i]) * (pred_dir->config.perceptron.GBHR[i]);
-    	}
-    	output = pred_dir->config.perceptron.weight_table[index][0] + sum;
+    		if (pred_dir->config.perceptron.GBHR[i] == 1)
+    		{
+    			SumOfProduct = SumOfProduct + pred_dir->config.perceptron.weight_table[index][i];
+    		}
+    		else if (pred_dir->config.perceptron.GBHR[i] == -1)
+    		{
+    			SumOfProduct = SumOfProduct - pred_dir->config.perceptron.weight_table[index][i];
+    		}
+    		else
+    		{
+    			printf("INVALID GBHR VALUE");
+    		}
+    		#ifdef DEBUG
+    			printf("GBHR[%d] : %d, weight_table[%d][%d] : %d, SumOfProduct : %d\n", i, pred_dir->config.perceptron.GBHR[i], index, i, pred_dir->config.perceptron.weight_table[index][i], SumOfProduct);
+			#endif
+		}
 
-    	pred_dir->config.perceptron.neunet_output = output;
-    	p = &pred_dir->config.perceptron.weight_table[index][i];
+		FinalSum = pred_dir->config.perceptron.weight_table[index][0] + SumOfProduct;
+		#ifdef DEBUG
+			printf("FinalSum : %d\n", FinalSum);
+		#endif
+
+		pred_dir->config.perceptron.neunet_output = FinalSum;			
+		p = &pred_dir->config.perceptron.weight_table[index][i];
     }
+    break;
     		  
 
 

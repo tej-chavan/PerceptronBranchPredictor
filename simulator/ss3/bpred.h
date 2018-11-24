@@ -142,7 +142,7 @@ struct bpred_dir_t {
        int wt_bits;                                           // Number of bits per slot. Will be passed as an argument by the user from 'l2size'
        int bhr_length;                                        // Length of GBHR
        signed int weight_table[1024][50];       // Weight table 
-       int neunet_output;                                     // this is the product of weight and GBHR bit
+       signed int neunet_output;                                     // this is the product of weight and GBHR bit
        signed int GBHR[50];                           // array of global branch history register
        int index;
     } perceptron;
