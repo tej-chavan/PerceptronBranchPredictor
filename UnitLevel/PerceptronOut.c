@@ -13,11 +13,11 @@
 
 static signed int SumOfProduct;
 static signed int FinalSum;
-static int WtEntryReg[27];
-static int GBHR[27];
+static int WtEntryReg[54];
+static int GBHR[54];
 static float theta;
 
-int bhr_length = 27;
+int bhr_length = 54;
 static int TruePrediction;
 
 
@@ -133,7 +133,11 @@ int main()
         if(signbit(FinalSum) == signbit(TruePrediction))
             correctPrediction++;
 
-        TruePrediction = -TruePrediction;
+        if(count%11 == 0)
+          TruePrediction = 1;
+        else
+          TruePrediction = -1;
+        //TruePrediction = -TruePrediction;
     }
     printf("Number of Correct Predictions : %d", correctPrediction);
 
