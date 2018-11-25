@@ -60,7 +60,7 @@
 #include "bpred.h"
 
 #include <unistd.h>
-#define DEBUG
+//#define DEBUG
 #include <math.h>
 /* turn this on to enable the SimpleScalar 2.0 RAS bug */
 /* #define RAS_BUG_COMPATIBLE */
