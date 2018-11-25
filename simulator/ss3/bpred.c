@@ -645,13 +645,13 @@ bpred_dir_lookup(struct bpred_dir_t *pred_dir,	/* branch dir predictor inst */
     		{
     			printf("INVALID GBHR VALUE");
     		}
-    		#ifdef DEBUG
+    		#ifndef DEBUG
     			printf("GBHR[%d] : %d, weight_table[%d][%d] : %d, SumOfProduct : %d\n", i, pred_dir->config.perceptron.GBHR[i], index, i, pred_dir->config.perceptron.weight_table[index][i], SumOfProduct);
 			#endif
 		}
 
 		FinalSum = pred_dir->config.perceptron.weight_table[index][0] + SumOfProduct;
-		#ifdef DEBUG
+		#ifndef DEBUG
 			printf("FinalSum : %d\n", FinalSum);
 		#endif
 
@@ -1063,7 +1063,7 @@ bpred_update(struct bpred_t *pred,	/* branch predictor instance */
 		else
 			t = -1;
 
-		#ifdef DEBUG
+		#ifndef DEBUG
 			printf("THETA : %f\n", theta);
 			printf("ABS OUTPUT VALUE : %d\n", (pred->dirpred.bimod->config.perceptron.neunet_output));
 			printf("TRUE PREDICTION : %d\n", t);
