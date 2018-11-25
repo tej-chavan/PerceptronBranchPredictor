@@ -627,7 +627,6 @@ bpred_dir_lookup(struct bpred_dir_t *pred_dir,	/* branch dir predictor inst */
     	// Calculating the index to hash into the weight table.
     	index = (baddr >> ShiftValue) % pred_dir->config.perceptron.wt_entries;
     	pred_dir->config.perceptron.index = index;
-    	printf("INDEX : %d", pred_dir->config.perceptron.index);
     	// ASsign the 0th bit of GBHR to 1 for maintaining bias
     	pred_dir->config.perceptron.GBHR[0] = 1;
 

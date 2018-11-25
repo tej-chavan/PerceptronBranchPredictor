@@ -127,7 +127,7 @@ static int twolev_config[4] =
                       PERCEPTRON PREDICTOR CONFIGURATION                     */
 /* PErceptron predictor config (<weight table entries> <size of each weight table entrt> <Number of entries in history register>) */
 static int neunet_nelt = 3;
-static int neunet_config[3] = {/*number of weight table entries*/256, /*size of each entry*/9, /*GBHR entries*/27};
+static int neunet_config[3] = {/*number of weight table entries*/1024, /*size of each entry*/9, /*GBHR entries*/24};
 
 /* combining predictor config (<meta_table_size> */
 static int comb_nelt = 1;
@@ -657,7 +657,7 @@ sim_reg_options(struct opt_odb_t *odb)
 
   opt_reg_string(odb, "-bpred",
      "branch predictor type {nottaken|taken|perfect|bimod|2lev|comb|perceptron}",
-                 &pred_type, /* default */"bimod",
+                 &pred_type, /* default */"perceptron",
                  /* print */TRUE, /* format */NULL);
 
 
