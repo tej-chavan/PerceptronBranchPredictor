@@ -657,7 +657,7 @@ sim_reg_options(struct opt_odb_t *odb)
 
   opt_reg_string(odb, "-bpred",
      "branch predictor type {nottaken|taken|perfect|bimod|2lev|comb|perceptron}",
-                 &pred_type, /* default */"perceptron",
+                 &pred_type, /* default */"bimod",
                  /* print */TRUE, /* format */NULL);
 
 
@@ -910,6 +910,7 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
   if (fetch_speed < 1)
     fatal("front-end speed must be positive and non-zero");
 
+  printf("asdasdsaadassdsds");
   if (!mystricmp(pred_type, "perfect"))
     {
       /* perfect predictor */
