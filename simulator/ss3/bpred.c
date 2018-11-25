@@ -1074,9 +1074,9 @@ bpred_update(struct bpred_t *pred,	/* branch predictor instance */
 			for (int i = 0; i < pred->dirpred.bimod->config.perceptron.bhr_length; i++)
 			{
 				if(t == pred->dirpred.bimod->config.perceptron.GBHR[i])
-					pred->dirpred.bimod->config.perceptron.weight_table[index][i] + 1;
+					pred->dirpred.bimod->config.perceptron.weight_table[index][i]++;
 				else
-					pred->dirpred.bimod->config.perceptron.weight_table[index][i] - 1;
+					pred->dirpred.bimod->config.perceptron.weight_table[index][i]--;
 
 				if(pred->dirpred.bimod->config.perceptron.weight_table[index][i] > 150)
 					pred->dirpred.bimod->config.perceptron.weight_table[index][i] = 150;
