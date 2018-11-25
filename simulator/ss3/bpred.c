@@ -286,7 +286,7 @@ bpred_dir_create (
     // Initialize weight table elements
     for (int i = 0; i < pred_dir->config.perceptron.wt_entries; i++)
     {
-    	for (int j = 0; i < pred_dir->config.perceptron.bhr_length; j++)
+    	for (int j = 0; j < pred_dir->config.perceptron.bhr_length; j++)
     	{
     		pred_dir->config.perceptron.weight_table[i][j] = 0;
     	}
