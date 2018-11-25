@@ -1011,7 +1011,6 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
     }
   else
     fatal("cannot parse predictor type `%s'", pred_type);
-    fatal("HELOOOOOOOO'");
 
   if (!bpred_spec_opt)
     bpred_spec_update = spec_CT;

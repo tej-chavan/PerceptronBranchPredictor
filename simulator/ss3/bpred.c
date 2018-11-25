@@ -51,7 +51,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+
 #include <assert.h>
 
 #include "host.h"
@@ -61,7 +61,7 @@
 
 #include <unistd.h>
 #define DEBUG
-
+#include <math.h>
 /* turn this on to enable the SimpleScalar 2.0 RAS bug */
 /* #define RAS_BUG_COMPATIBLE */
 
@@ -622,9 +622,10 @@ bpred_dir_lookup(struct bpred_dir_t *pred_dir,	/* branch dir predictor inst */
     	int index;
     	signed int SumOfProduct = 0;
     	signed int FinalSum = 0;
+    	int ShiftValue = MD_BR_SHIFT;
 
     	// Calculating the index to hash into the weight table.
-    	index = (baddr >> MD_BR_SHIFT) % pred_dir->config.perceptron.wt_entries;
+    	index = (baddr >> ShiftValue) % pred_dir->config.perceptron.wt_entries;
     	pred_dir->config.perceptron.index = index;
     	printf("INDEX : %d", pred_dir->config.perceptron.index);
     	// ASsign the 0th bit of GBHR to 1 for maintaining bias
@@ -1047,6 +1048,59 @@ bpred_update(struct bpred_t *pred,	/* branch predictor instance */
   /* update state (but not for jumps) */
   if (dir_update_ptr->pdir1)
     {
+    /*---------------------------------------------------------------------------------------------
+    Perceptron Updates and training
+    -----------------------------------------------------------------------------------------------*/	
+    if (pred->class == BPredPerceptron)
+    {
+    	float theta;
+    	int t;
+    	theta = 1.93 * (pred->dirpred.bimod->config.perceptron.bhr_length) + 14;
+    	int index = pred->dirpred.bimod->config.perceptron.index;
+		signed int output = pred->dirpred.bimod->config.perceptron.neunet_output;
+		if (taken)
+			t = 1;
+		else
+			t = -1;
+
+		#ifdef DEBUG
+			printf("THETA : %f\n", theta);
+			printf("ABS OUTPUT VALUE : %d\n", (pred->dirpred.bimod->config.perceptron.neunet_output));
+			printf("TRUE PREDICTION : %d\n", t);
+		#endif
+
+		if ((output < 0 && t > 0) || (output >= 0 && t < 0) || ((output) <= theta))
+		{
+			for (int i = 0; i < pred->dirpred.bimod->config.perceptron.bhr_length; i++)
+			{
+				if(t == pred->dirpred.bimod->config.perceptron.GBHR[i])
+					pred->dirpred.bimod->config.perceptron.weight_table[index][i] + 1;
+				else
+					pred->dirpred.bimod->config.perceptron.weight_table[index][i] - 1;
+
+				if(pred->dirpred.bimod->config.perceptron.weight_table[index][i] > 150)
+					pred->dirpred.bimod->config.perceptron.weight_table[index][i] = 150;
+				else if (pred->dirpred.bimod->config.perceptron.weight_table[index][i] < -150)
+					pred->dirpred.bimod->config.perceptron.weight_table[index][i] = -150;
+			}
+		}
+
+		for(int i = pred->dirpred.bimod->config.perceptron.bhr_length-1; i > 0; i--)
+		{
+			pred->dirpred.bimod->config.perceptron.GBHR[i] = pred->dirpred.bimod->config.perceptron.GBHR[i-1];
+		}	
+		pred->dirpred.bimod->config.perceptron.GBHR[0] = t;
+    }
+
+
+
+
+
+
+
+
+
+    /*---------------------------------------------------------------------------------------*/	
       if (taken)
 	{
 	  if (*dir_update_ptr->pdir1 < 3)
